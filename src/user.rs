@@ -1,14 +1,14 @@
 use crate::lesson;
 
 pub struct User {
-    username: String,
-    enrolled_lesson: Vec<lesson::LessonType>,
+    pub username: String,
+    pub enrolled_lesson: Vec<lesson::LessonType>,
 }
 
 impl User {
-    fn new(username: impl ToString) -> User {
+    pub fn new(username: impl Into<String>) -> User {
         User {
-            username: username.to_string(),
+            username: username.into(),
             enrolled_lesson: Vec::new(),
         }
     }

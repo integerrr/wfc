@@ -11,7 +11,7 @@ pub enum LessonType {
 }
 
 impl LessonType {
-    fn get_price(&self) -> f32 {
+    pub fn get_price(&self) -> f32 {
         match self {
             Self::Aquacise => 10.33,
             Self::Bodysculpt => 7.98,
@@ -24,22 +24,22 @@ impl LessonType {
 }
 
 pub struct LessonListing {
-    date: NaiveDateTime,
-    lesson_type: LessonType,
-    review: Vec<LessonReview>,
-    students_enrolled: Vec<user::User>,
+    pub date: DateTime<Local>,
+    pub lesson_type: LessonType,
+    pub review: Vec<LessonReview>,
+    pub students_enrolled: Vec<user::User>,
 }
 
 impl LessonListing {
-    fn new(date: NaiveDateTime, lesson_type: LessonType) -> LessonListing {
+    pub fn new(date: DateTime<Local>, lesson_type: LessonType) -> LessonListing {
         LessonListing { date, lesson_type, review: Vec::new(), students_enrolled: Vec::new() }
     } 
 }
 
 pub struct LessonReview {
-    user: user::User,
-    rating: LessonRating,
-    comment: String,
+    pub user: user::User,
+    pub rating: LessonRating,
+    pub comment: String,
 }
 
 impl LessonReview {

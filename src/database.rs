@@ -5,7 +5,7 @@ pub fn generate_lessons() -> Vec<LessonListing> {
     let mut lessons: Vec<LessonListing> = Vec::new();
     let mut now = Local::now();
     now = change_datetime_to_10am(now);
-    dbg!(now);
+    // dbg!(now);
 
     for day_count in 0..16 {
         now = change_datetime_to_10am(now);
@@ -32,7 +32,7 @@ pub fn generate_lessons() -> Vec<LessonListing> {
         }
     }
 
-    dbg!(&lessons);
+    // dbg!(&lessons);
     lessons
 }
 
