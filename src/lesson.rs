@@ -1,9 +1,8 @@
 use crate::user;
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Local};
 
+#[derive(Debug, Clone, Copy)]
 pub enum LessonType {
-    Aquacise,
-    Bodysculpt,
     BoxFit,
     Spin,
     Yoga,
@@ -13,8 +12,6 @@ pub enum LessonType {
 impl LessonType {
     pub fn get_price(&self) -> f32 {
         match self {
-            Self::Aquacise => 10.33,
-            Self::Bodysculpt => 7.98,
             Self::BoxFit => 4.17,
             Self::Spin => 15.28,
             Self::Yoga => 48.73,
@@ -23,6 +20,7 @@ impl LessonType {
     }
 }
 
+#[derive(Debug)]
 pub struct LessonListing {
     pub date: DateTime<Local>,
     pub lesson_type: LessonType,
@@ -36,6 +34,7 @@ impl LessonListing {
     } 
 }
 
+#[derive(Debug)]
 pub struct LessonReview {
     pub user: user::User,
     pub rating: LessonRating,
@@ -47,6 +46,7 @@ impl LessonReview {
 }
 
 #[repr(i32)]
+#[derive(Debug, Clone, Copy)]
 pub enum LessonRating {
     VeryGood = 5,
     Good = 4,

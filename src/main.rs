@@ -14,6 +14,14 @@ fn login(mut users: &mut Vec<User>, mut lessons: &mut Vec<LessonListing>) {
     println!("Login username:");
     io::stdin().read_line(&mut username)?;
     
+    if let Err(e) = io::stdin().read_line(&mut username) {
+        println!("Error: {e}");
+    } else {
+        database::login_user_validation(&mut users, username.trim());
+        run_bookings_menu(&mut users, &mut lessons);
+    }
+    // dbg!(users);
+    // dbg!(lessons);
 }
 
 fn print_main_menu() {
