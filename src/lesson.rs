@@ -38,10 +38,19 @@ impl LessonListing {
 
 pub struct LessonReview {
     user: user::User,
-    rating: i8,
+    rating: LessonRating,
     comment: String,
 }
 
 impl LessonReview {
     
+}
+
+#[repr(i32)]
+pub enum LessonRating {
+    VeryGood = 5,
+    Good = 4,
+    Neutral = 3,
+    Bad = 2,
+    VeryBad = 1,
 }
