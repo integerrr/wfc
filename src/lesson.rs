@@ -12,10 +12,10 @@ pub enum LessonType {
 impl LessonType {
     pub fn get_price(&self) -> f32 {
         match self {
-            Self::BoxFit => 4.17,
+            Self::BoxFit => 14.17,
             Self::Spin => 15.28,
-            Self::Yoga => 48.73,
-            Self::Zumba => 50.49,
+            Self::Yoga => 12.73,
+            Self::Zumba => 13.49,
         }
     }
 }
