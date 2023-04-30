@@ -30,8 +30,13 @@ pub struct LessonListing {
 
 impl LessonListing {
     pub fn new(date: DateTime<Local>, lesson_type: LessonType) -> LessonListing {
-        LessonListing { date, lesson_type, review: Vec::new(), students_enrolled: Vec::new() }
-    } 
+        LessonListing {
+            date,
+            lesson_type,
+            review: Vec::new(),
+            students_enrolled: Vec::new(),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -41,9 +46,7 @@ pub struct LessonReview {
     pub comment: String,
 }
 
-impl LessonReview {
-    
-}
+impl LessonReview {}
 
 #[repr(i32)]
 #[derive(Debug, Clone, Copy)]

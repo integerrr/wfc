@@ -1,11 +1,13 @@
-use crate::{lesson::{LessonListing, LessonType}, user::User};
-use chrono::{Datelike, Weekday, Timelike, DateTime, Local, Days};
+use crate::{
+    lesson::{LessonListing, LessonType},
+    user::User,
+};
+use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
 
 pub fn generate_lessons() -> Vec<LessonListing> {
     let mut lessons: Vec<LessonListing> = Vec::new();
     let mut now = Local::now();
     now = change_datetime_to_10am(now);
-    // dbg!(now);
 
     for day_count in 0..16 {
         now = change_datetime_to_10am(now);
@@ -32,7 +34,6 @@ pub fn generate_lessons() -> Vec<LessonListing> {
         }
     }
 
-    // dbg!(&lessons);
     lessons
 }
 
@@ -47,13 +48,17 @@ pub fn login_user_validation(users: &mut Vec<User>, login_username: impl Into<St
         println!("*******************************************");
         println!("Welcome first timer! {}", &temp_user.username);
     }
-    // dbg!(temp);
-    // dbg!(existing);
 
     users
 }
 
 fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {
-    time = time.with_hour(10).unwrap().with_minute(0).unwrap().with_second(0).unwrap();
+    time = time
+        .with_hour(10)
+        .unwrap()
+        .with_minute(0)
+        .unwrap()
+        .with_second(0)
+        .unwrap();
     time
 }
