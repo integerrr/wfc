@@ -37,16 +37,18 @@ pub fn generate_lessons() -> Vec<LessonListing> {
     lessons
 }
 
-pub fn login_user_validation(users: &mut Vec<User>, login_username: impl Into<String>) -> &mut Vec<User> {
-    let temp_user = User::new(login_username);
-
-    if users.contains(&temp_user) {
+pub fn login_user_validation(
+    users: &mut Vec<User>,
+    login_username: impl Into<String>,
+) -> &mut Vec<User> {
+    let username = login_username.into();
+    if users.iter().any(|user| &user.username == &username) {
         println!("*******************************************");
-        println!("Welcome back {}!", &temp_user.username);
+        println!("Welcome back {}!", &username);
     } else {
-        users.push(temp_user.clone());
+        users.push(User::new(&username));
         println!("*******************************************");
-        println!("Welcome first timer! {}", &temp_user.username);
+        println!("Welcome first timer! {}", &username);
     }
 
     users

@@ -14,9 +14,3 @@ impl User {
         }
     }
 }
-
-impl PartialEq for User {
-    fn eq(&self, other: &Self) -> bool {
-        self.username == other.username
-    }
-}
