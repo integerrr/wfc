@@ -8,7 +8,7 @@ use std::io;
 
 use database::Database;
 
-fn login(mut db: &mut Database) {
+fn login(db: &mut Database) {
     let mut current_username = String::new();
     println!("*******************************************");
     println!("Login username:");
@@ -18,7 +18,7 @@ fn login(mut db: &mut Database) {
     } else {
         db.login_user_validation(current_username.trim());
         current_username = current_username.trim().to_string();
-        menus::main_menu(&mut db, current_username);
+        menus::main_menu(db, current_username);
     }
 }
 

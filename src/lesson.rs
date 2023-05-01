@@ -2,7 +2,6 @@ use std::fmt::Display;
 
 use crate::user;
 use chrono::{DateTime, Local};
-use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 #[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq)]

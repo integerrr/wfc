@@ -8,7 +8,7 @@ use crate::{
     printmenu::{self},
 };
 
-pub fn main_menu(mut db: &mut Database, current_username: String) {
+pub fn main_menu(db: &mut Database, current_username: String) {
     let mut option_input = String::new();
     let current_username = current_username;
     dbg!(&db);
@@ -21,7 +21,7 @@ pub fn main_menu(mut db: &mut Database, current_username: String) {
             println!("Error: {e}");
         } else {
             match option_input.trim().parse::<i32>() {
-                Ok(1) => new_booking_menu(&mut db, current_username.clone()),
+                Ok(1) => new_booking_menu(db, current_username.clone()),
                 Ok(2) => todo!(),
                 Ok(3) => todo!(),
                 Ok(4) => todo!(),
@@ -34,7 +34,7 @@ pub fn main_menu(mut db: &mut Database, current_username: String) {
     }
 }
 
-fn new_booking_menu(mut db: &mut Database, current_username: String) {
+fn new_booking_menu(db: &mut Database, current_username: String) {
     let mut input_option = String::new();
 
     loop {
@@ -55,10 +55,10 @@ fn new_booking_menu(mut db: &mut Database, current_username: String) {
     }
 }
 
-fn book_lesson_by_weekday_menu(mut db: &mut Database, current_username: String) {
+fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
     let mut input_option = String::new();
     let mut filtered_lessons: Vec<&LessonListing> = Vec::new();
-    let mut chosen_lesson: LessonListing;
+    let chosen_lesson: LessonListing;
 
     loop {
         input_option.clear();
@@ -71,7 +71,7 @@ fn book_lesson_by_weekday_menu(mut db: &mut Database, current_username: String) 
             match input_option.trim().parse::<i32>() {
                 Ok(1) => {
                     filtered_lessons = get_and_display_available_lessons_by_weekday(
-                        &db,
+                        db,
                         Weekday::Sat,
                         current_username.clone(),
                     );
@@ -79,7 +79,7 @@ fn book_lesson_by_weekday_menu(mut db: &mut Database, current_username: String) 
                 }
                 Ok(2) => {
                     filtered_lessons = get_and_display_available_lessons_by_weekday(
-                        &db,
+                        db,
                         Weekday::Sun,
                         current_username.clone(),
                     );
@@ -110,7 +110,7 @@ fn book_lesson_by_weekday_menu(mut db: &mut Database, current_username: String) 
         }
     }
 
-    db.book_lesson(chosen_lesson.clone(), current_username.clone());
+    db.book_lesson(chosen_lesson.clone(), current_username);
 
     println!();
     println!(
@@ -134,7 +134,7 @@ fn get_and_display_available_lessons_by_weekday(
                 && !(lesson
                     .students_enrolled
                     .iter()
-                    .any(|user| &user.username == &current_username))
+                    .any(|user| user.username == current_username))
                 && lesson.get_vacancy() > 0
         })
         .collect();

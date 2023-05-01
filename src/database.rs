@@ -1,6 +1,6 @@
 use crate::{
-    lesson::{self, LessonListing, LessonType},
-    user::{self, User},
+    lesson::{LessonListing, LessonType},
+    user::User,
 };
 use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
 
