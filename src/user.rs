@@ -1,9 +1,9 @@
-use crate::lesson;
+use crate::lesson::LessonListing;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct User {
     pub username: String,
-    pub enrolled_lesson: Vec<lesson::LessonType>,
+    pub enrolled_lesson: Vec<LessonListing>,
 }
 
 impl User {
