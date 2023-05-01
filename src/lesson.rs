@@ -20,7 +20,7 @@ impl LessonType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LessonListing {
     pub date: DateTime<Local>,
     pub lesson_type: LessonType,
@@ -39,7 +39,7 @@ impl LessonListing {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LessonReview {
     pub user: user::User,
     pub rating: LessonRating,
