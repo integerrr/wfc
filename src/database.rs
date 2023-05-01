@@ -1,14 +1,14 @@
 use crate::{
-    lesson::{LessonListing, LessonType},
-    user::User,
+    lesson::{self, LessonListing, LessonType},
+    user::{self, User},
 };
 use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
 
 #[derive(Debug, Clone)]
 pub struct Database {
-    users: Vec<User>,
-    lessons: Vec<LessonListing>,
-    current_user: Option<User>,
+    pub users: Vec<User>,
+    pub lessons: Vec<LessonListing>,
+    pub current_user: Option<User>,
 }
 
 impl Database {
@@ -23,11 +23,11 @@ impl Database {
     pub fn clear_current_user(&mut self) {
         self.current_user = None;
     }
-    
+
     fn set_current_user(&mut self, user: User) {
         self.current_user = Some(user);
     }
-    
+
     fn add_user(&mut self, user: User) {
         self.users.push(user);
     }
@@ -80,6 +80,27 @@ impl Database {
             println!("Welcome first timer! {}", &username);
         }
         dbg!(&self.current_user);
+    }
+
+    pub fn book_lesson(&mut self, chosen_lesson: LessonListing, username: String) {
+        let validated_lesson: LessonListing;
+
+        if let Some(lesson) = self
+            .lessons
+            .iter_mut()
+            .find(|lesson| *lesson == &chosen_lesson)
+        {
+            validated_lesson = lesson.clone();
+
+            if let Some(user) = self.users.iter_mut().find(|user| user.username == username) {
+                user.enrolled_lesson.push(validated_lesson);
+                lesson.students_enrolled.push(user.clone());
+            } else {
+                panic!("couldn't find the current user in the database??");
+            }
+        } else {
+            panic!("couldn't find the selected lesson in database");
+        }
     }
 
     fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {

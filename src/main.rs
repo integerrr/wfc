@@ -32,7 +32,7 @@ fn main() -> io::Result<()> {
         printmenu::print_login_menu();
         io::stdin().read_line(&mut menu_option)?;
 
-        match menu_option.trim().parse::<u8>() {
+        match menu_option.trim().parse::<i32>() {
             Ok(1) => login(&mut db),
             Ok(2) => break,
             Ok(_) => println!("invalid"),

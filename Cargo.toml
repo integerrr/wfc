@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.24"
+strum = "0.24.1"
+strum_macros = "0.24.3"

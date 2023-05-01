@@ -33,4 +33,28 @@ pub fn print_booking_by_view_choice() {
     println!("3. Go back");
 }
 
-pub fn print_available_lessons_menu() {}
+pub fn print_booking_weekday_choice() {
+    println!();
+    println!("*******************************************");
+    println!("View lessons on:");
+    println!();
+    println!("1. Saturdays");
+    println!("2. Sundays");
+}
+
+pub fn print_booking_type_choice() {
+    println!();
+    println!("*******************************************");
+    println!("View lessons by:");
+    println!();
+
+    for (index, lesson_type) in LessonType::iter().enumerate() {
+        let lesson_string = match lesson_type {
+            LessonType::BoxFit => "Box fit",
+            LessonType::Spin => "Spin",
+            LessonType::Yoga => "Yoga",
+            LessonType::Zumba => "Zumba",
+        };
+        println!("{}. {}", index + 1, lesson_string);
+    }
+}
