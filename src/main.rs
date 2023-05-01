@@ -18,7 +18,7 @@ fn login(mut db: &mut Database) {
     } else {
         db.login_user_validation(current_username.trim());
         current_username = current_username.trim().to_string();
-        menus::run_bookings_menu(&mut db, current_username);
+        menus::main_menu(&mut db, current_username);
     }
 }
 
@@ -29,7 +29,7 @@ fn main() -> io::Result<()> {
     loop {
         db.clear_current_user();
         menu_option.clear();
-        printmenu::print_main_menu();
+        printmenu::print_login_menu();
         io::stdin().read_line(&mut menu_option)?;
 
         match menu_option.trim().parse::<u8>() {

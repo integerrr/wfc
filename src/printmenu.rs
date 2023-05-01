@@ -1,4 +1,9 @@
-pub fn print_main_menu() {
+use strum::IntoEnumIterator;
+
+use crate::lesson::LessonType;
+
+pub fn print_login_menu() {
+    println!();
     println!("*******************************************");
     println!("Hello, world!");
 
@@ -7,8 +12,9 @@ pub fn print_main_menu() {
     println!("2. Exit");
 }
 
-pub fn print_bookings_menu() {
+pub fn print_main_menu() {
     println!();
+    println!("*******************************************");
     println!("1. Book a new lesson");
     println!("2. Change/Cancel an existing booking");
     println!("3. Leave a lesson review");
@@ -17,7 +23,7 @@ pub fn print_bookings_menu() {
     println!("6. Logout");
 }
 
-pub fn print_lesson_selection_by_view_menu() {
+pub fn print_booking_by_view_choice() {
     println!();
     println!("*******************************************");
     println!("How would you like to view the available lessons?");

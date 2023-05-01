@@ -1,14 +1,20 @@
 use std::io;
 
-use crate::{database::Database, printmenu};
+use chrono::{Datelike, Weekday};
 
-pub fn run_bookings_menu(mut db: &mut Database, current_username: String) {
+use crate::{
+    database::Database,
+    lesson::{LessonListing, LessonType},
+    printmenu::{self},
+};
+
+pub fn main_menu(mut db: &mut Database, current_username: String) {
     let mut option_input = String::new();
     let current_username = current_username;
 
     loop {
         option_input.clear();
-        printmenu::print_bookings_menu();
+        printmenu::print_main_menu();
 
         if let Err(e) = io::stdin().read_line(&mut option_input) {
             println!("Error: {e}");
@@ -27,12 +33,12 @@ pub fn run_bookings_menu(mut db: &mut Database, current_username: String) {
     }
 }
 
-fn run_lesson_selection_menu(mut db: &mut Database, current_username: &String) {
+fn new_booking_menu(mut db: &mut Database, current_username: String) {
     let mut input_option = String::new();
 
     loop {
         input_option.clear();
-        printmenu::print_lesson_selection_by_view_menu();
+        printmenu::print_booking_by_view_choice();
 
         if let Err(e) = io::stdin().read_line(&mut input_option) {
             println!("Error: {e}");
