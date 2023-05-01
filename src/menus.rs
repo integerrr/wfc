@@ -4,6 +4,7 @@ use crate::{lesson::LessonListing, printmenu, user::User};
 
 pub fn run_bookings_menu(mut users: &mut Vec<User>, mut lessons: &mut Vec<LessonListing>) {
     let mut option_input = String::new();
+    let current_username = current_username;
 
     loop {
         option_input.clear();
@@ -31,7 +32,7 @@ fn run_lesson_selection_menu() {
 
     loop {
         input_option.clear();
-        printmenu::print_lesson_selection_menu();
+        printmenu::print_lesson_selection_by_view_menu();
 
         if let Err(e) = io::stdin().read_line(&mut input_option) {
             println!("Error: {e}");

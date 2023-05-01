@@ -17,7 +17,7 @@ pub fn print_bookings_menu() {
     println!("6. Logout");
 }
 
-pub fn print_lesson_selection_menu() {
+pub fn print_lesson_selection_by_view_menu() {
     println!();
     println!("*******************************************");
     println!("How would you like to view the available lessons?");
@@ -26,3 +26,5 @@ pub fn print_lesson_selection_menu() {
     println!("2. View by type of lesson");
     println!("3. Go back");
 }
+
+pub fn print_available_lessons_menu() {}
