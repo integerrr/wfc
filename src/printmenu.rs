@@ -49,12 +49,6 @@ pub fn print_booking_type_choice() {
     println!();
 
     for (index, lesson_type) in LessonType::iter().enumerate() {
-        let lesson_string = match lesson_type {
-            LessonType::BoxFit => "Box fit",
-            LessonType::Spin => "Spin",
-            LessonType::Yoga => "Yoga",
-            LessonType::Zumba => "Zumba",
-        };
-        println!("{}. {}", index + 1, lesson_string);
+        println!("{}. {}", index + 1, lesson_type);
     }
 }
