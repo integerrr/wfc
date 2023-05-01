@@ -1,8 +1,8 @@
 use std::io;
 
-use crate::{lesson::LessonListing, printmenu, user::User};
+use crate::{database::Database, printmenu};
 
-pub fn run_bookings_menu(mut users: &mut Vec<User>, mut lessons: &mut Vec<LessonListing>) {
+pub fn run_bookings_menu(mut db: &mut Database, current_username: String) {
     let mut option_input = String::new();
     let current_username = current_username;
 
@@ -14,7 +14,7 @@ pub fn run_bookings_menu(mut users: &mut Vec<User>, mut lessons: &mut Vec<Lesson
             println!("Error: {e}");
         } else {
             match option_input.trim().parse::<u8>() {
-                Ok(1) => run_lesson_selection_menu(),
+                Ok(1) => run_lesson_selection_menu(&mut db, &current_username),
                 Ok(2) => todo!(),
                 Ok(3) => todo!(),
                 Ok(4) => todo!(),
@@ -27,7 +27,7 @@ pub fn run_bookings_menu(mut users: &mut Vec<User>, mut lessons: &mut Vec<Lesson
     }
 }
 
-fn run_lesson_selection_menu() {
+fn run_lesson_selection_menu(mut db: &mut Database, current_username: &String) {
     let mut input_option = String::new();
 
     loop {
