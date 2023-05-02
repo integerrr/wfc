@@ -141,27 +141,43 @@ fn book_lesson_by_type_menu(db: &mut Database, current_username: String) {
         input_option.clear();
         filtered_lessons.clear();
         printmenu::print_booking_type_choice();
-        
+
         if let Err(e) = io::stdin().read_line(&mut input_option) {
             println!("Error: {e}");
         } else {
             match input_option.trim().parse::<i32>() {
                 Ok(1) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(db, LessonType::BoxFit, current_username.clone());
+                    filtered_lessons = get_and_display_available_lessons_by_type(
+                        db,
+                        LessonType::BoxFit,
+                        current_username.clone(),
+                    );
                     break;
-                },
+                }
                 Ok(2) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(db, LessonType::Spin, current_username.clone());
+                    filtered_lessons = get_and_display_available_lessons_by_type(
+                        db,
+                        LessonType::Spin,
+                        current_username.clone(),
+                    );
                     break;
-                },
+                }
                 Ok(3) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(db, LessonType::Yoga, current_username.clone());
+                    filtered_lessons = get_and_display_available_lessons_by_type(
+                        db,
+                        LessonType::Yoga,
+                        current_username.clone(),
+                    );
                     break;
-                },
+                }
                 Ok(4) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(db, LessonType::Zumba, current_username.clone());
+                    filtered_lessons = get_and_display_available_lessons_by_type(
+                        db,
+                        LessonType::Zumba,
+                        current_username.clone(),
+                    );
                     break;
-                },
+                }
                 Ok(_) => println!("invalid"),
                 Err(e) => println!("Error: {e}"),
             }
@@ -172,10 +188,22 @@ fn book_lesson_by_type_menu(db: &mut Database, current_username: String) {
     db.book_lesson(chosen_lesson, current_username);
 }
 
-fn get_and_display_available_lessons_by_type(db: &Database, lesson_type: LessonType, current_username: String) -> Vec<&LessonListing> {
-    let filtered_lesson: Vec<_> = db.lessons
+fn get_and_display_available_lessons_by_type(
+    db: &Database,
+    lesson_type: LessonType,
+    current_username: String,
+) -> Vec<&LessonListing> {
+    let filtered_lesson: Vec<_> = db
+        .lessons
         .iter()
-        .filter(|lesson| lesson.lesson_type == lesson_type && !(lesson.students_enrolled.iter().any(|user| user.username == current_username)) && lesson.get_vacancy() > 0)
+        .filter(|lesson| {
+            lesson.lesson_type == lesson_type
+                && !(lesson
+                    .students_enrolled
+                    .iter()
+                    .any(|user| user.username == current_username))
+                && lesson.get_vacancy() > 0
+        })
         .collect();
 
     println!(); // beautifying things
@@ -187,7 +215,12 @@ fn get_and_display_available_lessons_by_type(db: &Database, lesson_type: LessonT
         .iter()
         .enumerate()
         .for_each(|(index, lesson)| {
-            println!("{}. {} ({})", index + 1, lesson.date.format("%d/%m/%Y %H:%M"), lesson.date.weekday());
+            println!(
+                "{}. {} ({})",
+                index + 1,
+                lesson.date.format("%d/%m/%Y %H:%M"),
+                lesson.date.weekday()
+            );
             println!("    {}, £{}", lesson.lesson_type, lesson.get_price());
         });
 
@@ -216,6 +249,6 @@ fn choose_lesson(filtered_lessons: Vec<&LessonListing>) -> LessonListing {
             panic!("couldn't parse the option input?");
         }
     }
-    
+
     chosen_lesson
 }
