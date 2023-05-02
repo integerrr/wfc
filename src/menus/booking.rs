@@ -7,7 +7,7 @@ use crate::{
     lesson::{LessonListing, LessonType},
 };
 
-pub fn main_menu(db: &mut Database, current_username: String) {
+pub fn main_menu(db: &mut Database) {
     let mut input_option = String::new();
 
     loop {
@@ -18,8 +18,8 @@ pub fn main_menu(db: &mut Database, current_username: String) {
             println!("Error: {e}");
         } else {
             match input_option.trim().parse::<i32>() {
-                Ok(1) => book_lesson_by_weekday_menu(db, current_username.clone()),
-                Ok(2) => book_lesson_by_type_menu(db, current_username.clone()),
+                Ok(1) => book_lesson_by_weekday_menu(db),
+                Ok(2) => book_lesson_by_type_menu(db),
                 Ok(3) => break,
                 Ok(_) => println!("invalid"),
                 Err(e) => println!("Error: {e}"),
@@ -28,7 +28,7 @@ pub fn main_menu(db: &mut Database, current_username: String) {
     }
 }
 
-fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
+fn book_lesson_by_weekday_menu(db: &mut Database) {
     let mut input_option = String::new();
     let mut filtered_lessons: Vec<&LessonListing> = Vec::new();
 
@@ -45,7 +45,6 @@ fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
                     filtered_lessons = get_and_display_available_lessons_by_weekday(
                         db,
                         Weekday::Sat,
-                        current_username.clone(),
                     );
                     break;
                 }
@@ -53,7 +52,6 @@ fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
                     filtered_lessons = get_and_display_available_lessons_by_weekday(
                         db,
                         Weekday::Sun,
-                        current_username.clone(),
                     );
                     break;
                 }
@@ -64,23 +62,21 @@ fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
     }
 
     let chosen_lesson = choose_lesson(filtered_lessons);
-    db.book_lesson(chosen_lesson, current_username);
+    db.book_lesson(chosen_lesson);
 }
 
 fn get_and_display_available_lessons_by_weekday(
     db: &Database,
     wd: Weekday,
-    current_username: String,
 ) -> Vec<&LessonListing> {
     let filtered_lessons: Vec<_> = db
         .lessons
         .iter()
         .filter(|lesson| {
             lesson.date.weekday() == wd
-                && !(lesson
-                    .students_enrolled
-                    .iter()
-                    .any(|user| user.username == current_username))
+                && !(lesson.students_enrolled.iter().any(|user| {
+                    user.username == db.current_user.map(|user| user.username).unwrap()
+                }))
                 && lesson.get_vacancy() > 0
         })
         .collect();
@@ -106,7 +102,7 @@ fn get_and_display_available_lessons_by_weekday(
     filtered_lessons
 }
 
-fn book_lesson_by_type_menu(db: &mut Database, current_username: String) {
+fn book_lesson_by_type_menu(db: &mut Database) {
     let mut input_option = String::new();
     let mut filtered_lessons: Vec<&LessonListing> = Vec::new();
 
@@ -120,35 +116,23 @@ fn book_lesson_by_type_menu(db: &mut Database, current_username: String) {
         } else {
             match input_option.trim().parse::<i32>() {
                 Ok(1) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(
-                        db,
-                        LessonType::BoxFit,
-                        current_username.clone(),
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_type(db, LessonType::BoxFit);
                     break;
                 }
                 Ok(2) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(
-                        db,
-                        LessonType::Spin,
-                        current_username.clone(),
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_type(db, LessonType::Spin);
                     break;
                 }
                 Ok(3) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(
-                        db,
-                        LessonType::Yoga,
-                        current_username.clone(),
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_type(db, LessonType::Yoga);
                     break;
                 }
                 Ok(4) => {
-                    filtered_lessons = get_and_display_available_lessons_by_type(
-                        db,
-                        LessonType::Zumba,
-                        current_username.clone(),
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_type(db, LessonType::Zumba);
                     break;
                 }
                 Ok(_) => println!("invalid"),
@@ -158,23 +142,21 @@ fn book_lesson_by_type_menu(db: &mut Database, current_username: String) {
     }
 
     let chosen_lesson: LessonListing = choose_lesson(filtered_lessons);
-    db.book_lesson(chosen_lesson, current_username);
+    db.book_lesson(chosen_lesson);
 }
 
 fn get_and_display_available_lessons_by_type(
     db: &Database,
     lesson_type: LessonType,
-    current_username: String,
 ) -> Vec<&LessonListing> {
     let filtered_lesson: Vec<_> = db
         .lessons
         .iter()
         .filter(|lesson| {
             lesson.lesson_type == lesson_type
-                && !(lesson
-                    .students_enrolled
-                    .iter()
-                    .any(|user| user.username == current_username))
+                && !(lesson.students_enrolled.iter().any(|user| {
+                    user.username == db.current_user.map(|user| user.username).unwrap()
+                }))
                 && lesson.get_vacancy() > 0
         })
         .collect();

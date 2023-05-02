@@ -83,7 +83,7 @@ impl Database {
         dbg!(&self.current_user);
     }
 
-    pub fn book_lesson(&mut self, chosen_lesson: LessonListing, username: String) {
+    pub fn book_lesson(&mut self, chosen_lesson: LessonListing) {
         let validated_lesson: LessonListing;
 
         if let Some(lesson) = self
@@ -93,7 +93,11 @@ impl Database {
         {
             validated_lesson = lesson.clone();
 
-            if let Some(user) = self.users.iter_mut().find(|user| user.username == username) {
+            if let Some(user) = self
+                .users
+                .iter_mut()
+                .find(|user| user.username == self.current_user.map(|user| user.username).unwrap())
+            {
                 user.enrolled_lesson.push(validated_lesson.clone());
                 lesson.students_enrolled.push(user.clone());
 

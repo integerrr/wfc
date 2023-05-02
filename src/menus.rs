@@ -18,7 +18,7 @@ pub fn main_menu(db: &mut Database, current_username: String) {
             println!("Error: {e}");
         } else {
             match option_input.trim().parse::<i32>() {
-                Ok(1) => booking::main_menu(db, current_username.clone()),
+                Ok(1) => booking::main_menu(db),
                 Ok(2) => todo!(),
                 Ok(3) => todo!(),
                 Ok(4) => todo!(),
