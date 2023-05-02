@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use chrono::{DateTime, Local};
+use std::fmt::Display;
 use strum_macros::EnumIter;
 
 use crate::user;

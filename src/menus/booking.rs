@@ -42,17 +42,13 @@ fn book_lesson_by_weekday_menu(db: &mut Database) {
         } else {
             match input_option.trim().parse::<i32>() {
                 Ok(1) => {
-                    filtered_lessons = get_and_display_available_lessons_by_weekday(
-                        db,
-                        Weekday::Sat,
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_weekday(db, Weekday::Sat);
                     break;
                 }
                 Ok(2) => {
-                    filtered_lessons = get_and_display_available_lessons_by_weekday(
-                        db,
-                        Weekday::Sun,
-                    );
+                    filtered_lessons =
+                        get_and_display_available_lessons_by_weekday(db, Weekday::Sun);
                     break;
                 }
                 Ok(_) => println!("invalid"),
@@ -65,10 +61,7 @@ fn book_lesson_by_weekday_menu(db: &mut Database) {
     db.book_lesson(chosen_lesson);
 }
 
-fn get_and_display_available_lessons_by_weekday(
-    db: &Database,
-    wd: Weekday,
-) -> Vec<&LessonListing> {
+fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> Vec<&LessonListing> {
     let filtered_lessons: Vec<_> = db
         .lessons
         .iter()
