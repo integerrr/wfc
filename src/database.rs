@@ -93,8 +93,16 @@ impl Database {
             validated_lesson = lesson.clone();
 
             if let Some(user) = self.users.iter_mut().find(|user| user.username == username) {
-                user.enrolled_lesson.push(validated_lesson);
+                user.enrolled_lesson.push(validated_lesson.clone());
                 lesson.students_enrolled.push(user.clone());
+
+                println!();
+                println!(
+                    "You have successfully booked a {} lesson on {} for £{}!",
+                    &validated_lesson.lesson_type,
+                    &validated_lesson.date.format("%d/%m/%Y %H:%M"),
+                    &validated_lesson.get_price(),
+                );
             } else {
                 panic!("couldn't find the current user in the database??");
             }
