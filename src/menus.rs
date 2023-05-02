@@ -103,7 +103,7 @@ fn book_lesson_by_weekday_menu(db: &mut Database, current_username: String) {
                 chosen_lesson = lesson.clone();
                 break;
             } else {
-                panic!("couldn't get a valid lesson from filtered_lessons!");
+                println!("invalid option");
             }
         } else {
             panic!("couldn't parse the option input?");
