@@ -16,8 +16,7 @@ fn login(db: &mut Database) {
         println!("Error: {e}");
     } else {
         db.login_user_validation(current_username.trim());
-        current_username = current_username.trim().to_string();
-        menus::main_menu(db, current_username);
+        menus::main_menu(db);
     }
 }
 

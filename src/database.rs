@@ -93,11 +93,14 @@ impl Database {
         {
             validated_lesson = lesson.clone();
 
-            if let Some(user) = self
-                .users
-                .iter_mut()
-                .find(|user| user.username == self.current_user.map(|user| user.username).unwrap())
-            {
+            if let Some(user) = self.users.iter_mut().find(|user| {
+                user.username
+                    == self
+                        .current_user
+                        .as_ref()
+                        .map(|user| user.username.clone())
+                        .unwrap()
+            }) {
                 user.enrolled_lesson.push(validated_lesson.clone());
                 lesson.students_enrolled.push(user.clone());
 

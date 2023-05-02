@@ -5,9 +5,8 @@ use std::io;
 
 use crate::database::Database;
 
-pub fn main_menu(db: &mut Database, current_username: String) {
+pub fn main_menu(db: &mut Database) {
     let mut option_input = String::new();
-    let current_username = current_username;
     dbg!(&db);
 
     loop {

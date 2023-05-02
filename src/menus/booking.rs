@@ -68,7 +68,12 @@ fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> V
         .filter(|lesson| {
             lesson.date.weekday() == wd
                 && !(lesson.students_enrolled.iter().any(|user| {
-                    user.username == db.current_user.map(|user| user.username).unwrap()
+                    user.username
+                        == db
+                            .current_user
+                            .as_ref()
+                            .map(|user| user.username.clone())
+                            .unwrap()
                 }))
                 && lesson.get_vacancy() > 0
         })
@@ -148,7 +153,12 @@ fn get_and_display_available_lessons_by_type(
         .filter(|lesson| {
             lesson.lesson_type == lesson_type
                 && !(lesson.students_enrolled.iter().any(|user| {
-                    user.username == db.current_user.map(|user| user.username).unwrap()
+                    user.username
+                        == db
+                            .current_user
+                            .as_ref()
+                            .map(|user| user.username.clone())
+                            .unwrap()
                 }))
                 && lesson.get_vacancy() > 0
         })
