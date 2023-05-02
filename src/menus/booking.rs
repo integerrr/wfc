@@ -7,7 +7,7 @@ use crate::{
     lesson::{LessonListing, LessonType},
 };
 
-pub fn new_booking_menu(db: &mut Database, current_username: String) {
+pub fn booking_main_menu(db: &mut Database, current_username: String) {
     let mut input_option = String::new();
 
     loop {

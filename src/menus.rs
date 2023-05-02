@@ -1,4 +1,5 @@
-mod bookingmenus;
+mod booking;
+mod change_or_cancel;
 
 use std::io;
 
@@ -17,7 +18,7 @@ pub fn main_menu(db: &mut Database, current_username: String) {
             println!("Error: {e}");
         } else {
             match option_input.trim().parse::<i32>() {
-                Ok(1) => bookingmenus::new_booking_menu(db, current_username.clone()),
+                Ok(1) => booking::booking_main_menu(db, current_username.clone()),
                 Ok(2) => todo!(),
                 Ok(3) => todo!(),
                 Ok(4) => todo!(),
