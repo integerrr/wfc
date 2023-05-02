@@ -1,8 +1,9 @@
+use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
+
 use crate::{
     lesson::{LessonListing, LessonType},
     user::User,
 };
-use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
 
 #[derive(Debug, Clone)]
 pub struct Database {

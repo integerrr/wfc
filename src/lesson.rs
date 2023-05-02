@@ -1,8 +1,8 @@
 use std::fmt::Display;
-
-use crate::user;
 use chrono::{DateTime, Local};
 use strum_macros::EnumIter;
+
+use crate::user;
 
 #[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
 pub enum LessonType {

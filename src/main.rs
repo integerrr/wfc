@@ -1,7 +1,6 @@
 mod database;
 mod lesson;
 mod menus;
-mod printmenu;
 mod user;
 
 use std::io;
@@ -29,7 +28,7 @@ fn main() -> io::Result<()> {
     loop {
         db.clear_current_user();
         menu_option.clear();
-        printmenu::print_login_menu();
+        menus::print_login_menu();
         io::stdin().read_line(&mut menu_option)?;
 
         match menu_option.trim().parse::<i32>() {
