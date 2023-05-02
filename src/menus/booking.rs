@@ -7,12 +7,12 @@ use crate::{
     lesson::{LessonListing, LessonType},
 };
 
-pub fn booking_main_menu(db: &mut Database, current_username: String) {
+pub fn main_menu(db: &mut Database, current_username: String) {
     let mut input_option = String::new();
 
     loop {
         input_option.clear();
-        print_booking_by_view_choice();
+        print_main_menu();
 
         if let Err(e) = io::stdin().read_line(&mut input_option) {
             println!("Error: {e}");
@@ -226,7 +226,7 @@ fn choose_lesson(filtered_lessons: Vec<&LessonListing>) -> LessonListing {
     chosen_lesson
 }
 
-fn print_booking_by_view_choice() {
+fn print_main_menu() {
     println!();
     println!("*******************************************");
     println!("How would you like to view the available lessons?");
