@@ -5,7 +5,7 @@ use chrono::{Datelike, Weekday};
 use crate::{
     database::Database,
     lesson::{LessonListing, LessonType},
-    printmenu::{self},
+    printmenu,
 };
 
 pub fn main_menu(db: &mut Database, current_username: String) {
