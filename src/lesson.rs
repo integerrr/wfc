@@ -2,7 +2,7 @@ use chrono::{DateTime, Local};
 use std::fmt::Display;
 use strum_macros::EnumIter;
 
-use crate::user;
+use crate::user::{self, User};
 
 #[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
 pub enum LessonType {
@@ -25,11 +25,11 @@ impl Display for LessonType {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LessonListing {
-    pub date: DateTime<Local>,
-    pub lesson_type: LessonType,
+    date: DateTime<Local>,
+    lesson_type: LessonType,
     max_student_capacity: i32,
-    pub review: Vec<LessonReview>,
-    pub students_enrolled: Vec<user::User>,
+    reviews: Vec<LessonReview>,
+    students_enrolled: Vec<User>,
 }
 
 impl LessonListing {
@@ -39,9 +39,45 @@ impl LessonListing {
             date,
             lesson_type,
             max_student_capacity: MAX_STUDENT_CAPACITY,
-            review: Vec::new(),
+            reviews: Vec::new(),
             students_enrolled: Vec::new(),
         }
+    }
+    pub fn enroll_student(&mut self, user: User) {
+        self.students_enrolled.push(user);
+    }
+
+    pub fn remove_student(&mut self, user: User) {
+        let student_idx = self
+            .students_enrolled
+            .iter()
+            .position(|stu| stu.is_same_as(&user))
+            .expect("exist");
+        self.students_enrolled.swap_remove(student_idx);
+    }
+
+    pub fn get_date(&self) -> DateTime<Local> {
+        self.date.clone()
+    }
+
+    pub fn get_lesson_type(&self) -> LessonType {
+        self.lesson_type.clone()
+    }
+
+    pub fn get_reviews(&self) -> Vec<LessonReview> {
+        self.reviews.clone()
+    }
+
+    pub fn get_students_enrolled(&self) -> Vec<User> {
+        self.students_enrolled.clone()
+    }
+
+    pub fn get_reviews_mut(&mut self) -> &mut Vec<LessonReview> {
+        &mut self.reviews
+    }
+
+    pub fn get_students_enrolled_mut(&mut self) -> &mut Vec<User> {
+        &mut self.students_enrolled
     }
 
     pub fn get_price(&self) -> f32 {
@@ -55,6 +91,10 @@ impl LessonListing {
 
     pub fn get_vacancy(&self) -> i32 {
         self.max_student_capacity - (self.students_enrolled.len() as i32)
+    }
+
+    pub fn is_same_as(&self, other: &LessonListing) -> bool {
+        (self.date == other.date) && (self.lesson_type == other.lesson_type)
     }
 }
 
