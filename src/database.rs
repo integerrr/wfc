@@ -136,6 +136,33 @@ impl Database {
         );
     }
 
+    pub fn get_and_display_booked_lessons(&self) -> Vec<LessonListing> {
+        let u = self.current_user.as_ref().expect("exist");
+
+        let enrolled_lessons = u.get_enrolled_lessons();
+        if !enrolled_lessons.is_empty() {
+            println!();
+            println!("*******************************************");
+            println!("Your booked lessons:");
+            println!();
+        } else {
+            println!();
+            println!("*******************************************");
+            println!("You have no booked lessons!");
+        }
+
+        for (index, lesson) in enrolled_lessons.iter().enumerate() {
+            println!(
+                "{}. {} ({})",
+                index + 1,
+                lesson.get_date().format("%d/%m/%Y %H:%M"),
+                lesson.get_date().weekday()
+            );
+            println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
+        }
+        enrolled_lessons
+    }
+
     fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {
         time = time
             .with_hour(10)

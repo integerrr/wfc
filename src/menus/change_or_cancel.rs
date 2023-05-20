@@ -1,7 +1,5 @@
 use std::io;
 
-use chrono::Datelike;
-
 use crate::{database::Database, lesson::LessonListing, menus::booking};
 
 pub fn main_menu(db: &mut Database) {
@@ -26,7 +24,7 @@ pub fn main_menu(db: &mut Database) {
 }
 
 fn change_booking_menu(db: &mut Database) {
-    let booked_lessons = get_and_display_booked_lessons(db);
+    let booked_lessons = db.get_and_display_booked_lessons();
 
     if booked_lessons.is_empty() {
         return;
@@ -39,7 +37,7 @@ fn change_booking_menu(db: &mut Database) {
 }
 
 fn cancel_booking_menu(db: &mut Database) {
-    let booked_lessons = get_and_display_booked_lessons(db);
+    let booked_lessons = db.get_and_display_booked_lessons();
 
     if booked_lessons.is_empty() {
         return;
@@ -78,40 +76,4 @@ fn print_main_menu() {
     println!("1. Change a booking");
     println!("2. Cancel a booking");
     println!("3. Go back");
-}
-
-fn get_and_display_booked_lessons(db: &Database) -> Vec<LessonListing> {
-    let current_username = &db
-        .current_user
-        .as_ref()
-        .expect("current user should exist")
-        .get_username();
-    let current_user = db
-        .users
-        .iter()
-        .find(|user| &user.get_username() == current_username)
-        .expect("user should exist");
-
-    let enrolled_lessons = current_user.get_enrolled_lessons();
-    if !enrolled_lessons.is_empty() {
-        println!();
-        println!("*******************************************");
-        println!("Your booked lessons:");
-        println!();
-    } else {
-        println!();
-        println!("*******************************************");
-        println!("You have no booked lessons!");
-    }
-
-    for (index, lesson) in enrolled_lessons.iter().enumerate() {
-        println!(
-            "{}. {} ({})",
-            index + 1,
-            lesson.get_date().format("%d/%m/%Y %H:%M"),
-            lesson.get_date().weekday()
-        );
-        println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
-    }
-    enrolled_lessons
 }
