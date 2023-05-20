@@ -68,7 +68,10 @@ fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> V
         .iter()
         .filter(|lesson| {
             lesson.get_date().weekday() == wd
-                && !(lesson.get_students_enrolled().iter().any(|u| u.is_same_as(&current_user)))
+                && !(lesson
+                    .get_students_enrolled()
+                    .iter()
+                    .any(|u| u.is_same_as(&current_user)))
                 && lesson.get_vacancy() > 0
         })
         .collect();
@@ -144,14 +147,20 @@ fn book_lesson_by_type_menu(db: &mut Database) {
     db.book_lesson(chosen_lesson);
 }
 
-fn get_and_display_available_lessons_by_type(db: &Database, lesson_type: LessonType) -> Vec<&LessonListing> {
+fn get_and_display_available_lessons_by_type(
+    db: &Database,
+    lesson_type: LessonType,
+) -> Vec<&LessonListing> {
     let current_username = &db.current_user.as_ref().expect("exist").get_username();
     let filtered_lessons: Vec<_> = db
         .lessons
         .iter()
         .filter(|lesson| {
             lesson.get_lesson_type() == lesson_type
-                && !(lesson.get_students_enrolled().iter().any(|user| &user.get_username() == current_username))
+                && !(lesson
+                    .get_students_enrolled()
+                    .iter()
+                    .any(|user| &user.get_username() == current_username))
                 && lesson.get_vacancy() > 0
         })
         .collect();
