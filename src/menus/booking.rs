@@ -7,8 +7,9 @@ use crate::{
     lesson::{LessonListing, LessonType},
 };
 
-pub fn main_menu(db: &mut Database) {
+pub fn main_menu(db: &mut Database) -> Option<LessonListing> {
     let mut input_option = String::new();
+    let mut selected_lesson = LessonListing::default();
 
     loop {
         input_option.clear();
@@ -18,17 +19,22 @@ pub fn main_menu(db: &mut Database) {
             println!("Error: {e}");
         } else {
             match input_option.trim().parse::<i32>() {
-                Ok(1) => book_lesson_by_weekday_menu(db),
-                Ok(2) => book_lesson_by_type_menu(db),
+                Ok(1) => selected_lesson = book_lesson_by_weekday_menu(db),
+                Ok(2) => selected_lesson = book_lesson_by_type_menu(db),
                 Ok(3) => break,
                 Ok(_) => println!("invalid"),
                 Err(e) => println!("Error: {e}"),
-            }
+            };
+        }
+
+        if selected_lesson != LessonListing::default() {
+            return Some(selected_lesson);
         }
     }
+    None
 }
 
-fn book_lesson_by_weekday_menu(db: &mut Database) {
+fn book_lesson_by_weekday_menu(db: &mut Database) -> LessonListing {
     let mut input_option = String::new();
     let mut filtered_lessons: Vec<&LessonListing> = Vec::new();
 
@@ -58,7 +64,8 @@ fn book_lesson_by_weekday_menu(db: &mut Database) {
     }
 
     let chosen_lesson = choose_lesson(filtered_lessons);
-    db.book_lesson(chosen_lesson);
+    db.book_lesson(chosen_lesson.clone());
+    chosen_lesson
 }
 
 fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> Vec<&LessonListing> {
@@ -104,7 +111,7 @@ fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> V
     filtered_lessons
 }
 
-fn book_lesson_by_type_menu(db: &mut Database) {
+fn book_lesson_by_type_menu(db: &mut Database) -> LessonListing {
     let mut input_option = String::new();
     let mut filtered_lessons: Vec<&LessonListing> = Vec::new();
 
@@ -144,7 +151,8 @@ fn book_lesson_by_type_menu(db: &mut Database) {
     }
 
     let chosen_lesson: LessonListing = choose_lesson(filtered_lessons);
-    db.book_lesson(chosen_lesson);
+    db.book_lesson(chosen_lesson.clone());
+    chosen_lesson
 }
 
 fn get_and_display_available_lessons_by_type(

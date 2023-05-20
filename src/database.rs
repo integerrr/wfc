@@ -69,7 +69,11 @@ impl Database {
     pub fn login_user_validation(&mut self, login_username: impl Into<String>) {
         let username = login_username.into();
 
-        if let Some(user) = self.users.iter().find(|user| user.username == username) {
+        if let Some(user) = self
+            .users
+            .iter()
+            .find(|user| user.get_username() == username)
+        {
             self.set_current_user(user.clone());
             println!("*******************************************");
             println!("Welcome back {}!", &username);
@@ -84,39 +88,52 @@ impl Database {
     }
 
     pub fn book_lesson(&mut self, chosen_lesson: LessonListing) {
-        let validated_lesson: LessonListing;
-
-        if let Some(lesson) = self
+        let current_user = self.current_user.clone().expect("exist");
+        let user = self
+            .users
+            .iter_mut()
+            .find(|u| u.is_same_as(&current_user))
+            .expect("exist");
+        let lesson = self
             .lessons
             .iter_mut()
-            .find(|lesson| *lesson == &chosen_lesson)
-        {
-            validated_lesson = lesson.clone();
+            .find(|lesson| lesson == &&chosen_lesson)
+            .expect("chosen_lesson should be confirmed to exist already");
 
-            if let Some(user) = self.users.iter_mut().find(|user| {
-                user.username
-                    == self
-                        .current_user
-                        .as_ref()
-                        .map(|user| user.username.clone())
-                        .unwrap()
-            }) {
-                user.enrolled_lesson.push(validated_lesson.clone());
-                lesson.students_enrolled.push(user.clone());
+        user.add_new_lesson(chosen_lesson.clone());
+        lesson.enroll_student(user.clone());
 
-                println!();
-                println!(
-                    "You have successfully booked a {} lesson on {} for £{}!",
-                    &validated_lesson.lesson_type,
-                    &validated_lesson.date.format("%d/%m/%Y %H:%M"),
-                    &validated_lesson.get_price(),
-                );
-            } else {
-                panic!("couldn't find the current user in the database??");
-            }
-        } else {
-            panic!("couldn't find the selected lesson in database");
-        }
+        println!();
+        println!(
+            "You have successfully booked a {} lesson on {} for £{}!",
+            &chosen_lesson.get_lesson_type(),
+            &chosen_lesson.get_date().format("%d/%m/%Y %H:%M"),
+            &chosen_lesson.get_price(),
+        );
+    }
+
+    pub fn cancel_lesson(&mut self, chosen_lesson: LessonListing) {
+        let current_user = self.current_user.clone().expect("exist");
+        let user = self
+            .users
+            .iter_mut()
+            .find(|u| u.is_same_as(&current_user))
+            .expect("exist");
+        let lesson = self
+            .lessons
+            .iter_mut()
+            .find(|l| l.is_same_as(&chosen_lesson))
+            .expect("exist");
+
+        user.remove_lesson(chosen_lesson.clone());
+        lesson.remove_student(user.clone());
+
+        println!();
+        println!(
+            "You have sucessfully cancelled the {} lesson on {}!",
+            &chosen_lesson.get_lesson_type(),
+            &chosen_lesson.get_date().format("%d/%m/%Y %H:%M"),
+        );
     }
 
     fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {

@@ -17,8 +17,8 @@ pub fn main_menu(db: &mut Database) {
             println!("Error: {e}");
         } else {
             match option_input.trim().parse::<i32>() {
-                Ok(1) => booking::main_menu(db),
-                Ok(2) => todo!(),
+                Ok(1) => _ = booking::main_menu(db),
+                Ok(2) => change_or_cancel::main_menu(db),
                 Ok(3) => todo!(),
                 Ok(4) => todo!(),
                 Ok(5) => todo!(),

@@ -4,8 +4,9 @@ use strum_macros::EnumIter;
 
 use crate::user::{self, User};
 
-#[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq, Default)]
 pub enum LessonType {
+    #[default]
     BoxFit,
     Spin,
     Yoga,
@@ -23,7 +24,7 @@ impl Display for LessonType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct LessonListing {
     date: DateTime<Local>,
     lesson_type: LessonType,
@@ -57,11 +58,11 @@ impl LessonListing {
     }
 
     pub fn get_date(&self) -> DateTime<Local> {
-        self.date.clone()
+        self.date
     }
 
     pub fn get_lesson_type(&self) -> LessonType {
-        self.lesson_type.clone()
+        self.lesson_type
     }
 
     pub fn get_reviews(&self) -> Vec<LessonReview> {
