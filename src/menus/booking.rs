@@ -62,27 +62,28 @@ fn book_lesson_by_weekday_menu(db: &mut Database) {
 }
 
 fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> Vec<&LessonListing> {
+    let current_user = db.current_user.clone().expect("e");
     let filtered_lessons: Vec<_> = db
         .lessons
         .iter()
         .filter(|lesson| {
-            lesson.date.weekday() == wd
-                && !(lesson.students_enrolled.iter().any(|user| {
-                    user.username
-                        == db
-                            .current_user
-                            .as_ref()
-                            .map(|user| user.username.clone())
-                            .unwrap()
-                }))
+            lesson.get_date().weekday() == wd
+                && !(lesson.get_students_enrolled().iter().any(|u| u.is_same_as(&current_user)))
                 && lesson.get_vacancy() > 0
         })
         .collect();
 
-    println!(); // beautifying things
-    println!("*******************************************");
-    println!("Available lessons:");
-    println!();
+    if !filtered_lessons.is_empty() {
+        println!();
+        println!("*******************************************");
+        println!("There's no available lessons!");
+        println!();
+    } else {
+        println!();
+        println!("*******************************************");
+        println!("Available lessons:");
+        println!();
+    }
 
     filtered_lessons
         .iter()
@@ -91,10 +92,10 @@ fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> V
             println!(
                 "{}. {} ({})",
                 index + 1,
-                lesson.date.format("%d/%m/%Y %H:%M"),
+                lesson.get_date().format("%d/%m/%Y %H:%M"),
                 &wd
             );
-            println!("    {}, £{}", lesson.lesson_type, lesson.get_price());
+            println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
         });
 
     filtered_lessons
@@ -143,46 +144,44 @@ fn book_lesson_by_type_menu(db: &mut Database) {
     db.book_lesson(chosen_lesson);
 }
 
-fn get_and_display_available_lessons_by_type(
-    db: &Database,
-    lesson_type: LessonType,
-) -> Vec<&LessonListing> {
-    let filtered_lesson: Vec<_> = db
+fn get_and_display_available_lessons_by_type(db: &Database, lesson_type: LessonType) -> Vec<&LessonListing> {
+    let current_username = &db.current_user.as_ref().expect("exist").get_username();
+    let filtered_lessons: Vec<_> = db
         .lessons
         .iter()
         .filter(|lesson| {
-            lesson.lesson_type == lesson_type
-                && !(lesson.students_enrolled.iter().any(|user| {
-                    user.username
-                        == db
-                            .current_user
-                            .as_ref()
-                            .map(|user| user.username.clone())
-                            .unwrap()
-                }))
+            lesson.get_lesson_type() == lesson_type
+                && !(lesson.get_students_enrolled().iter().any(|user| &user.get_username() == current_username))
                 && lesson.get_vacancy() > 0
         })
         .collect();
 
-    println!(); // beautifying things
-    println!("*******************************************");
-    println!("Available lessons:");
-    println!();
+    if !filtered_lessons.is_empty() {
+        println!();
+        println!("*******************************************");
+        println!("There's no available lessons!");
+        println!();
+    } else {
+        println!();
+        println!("*******************************************");
+        println!("Available lessons:");
+        println!();
+    }
 
-    filtered_lesson
+    filtered_lessons
         .iter()
         .enumerate()
         .for_each(|(index, lesson)| {
             println!(
                 "{}. {} ({})",
                 index + 1,
-                lesson.date.format("%d/%m/%Y %H:%M"),
-                lesson.date.weekday()
+                lesson.get_date().format("%d/%m/%Y %H:%M"),
+                lesson.get_date().weekday()
             );
-            println!("    {}, £{}", lesson.lesson_type, lesson.get_price());
+            println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
         });
 
-    filtered_lesson
+    filtered_lessons
 }
 
 fn choose_lesson(filtered_lessons: Vec<&LessonListing>) -> LessonListing {
