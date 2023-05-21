@@ -84,7 +84,6 @@ impl Database {
             println!("*******************************************");
             println!("Welcome first timer! {}", &username);
         }
-        dbg!(&self.current_user);
     }
 
     pub fn book_lesson(&mut self, chosen_lesson: LessonListing) {

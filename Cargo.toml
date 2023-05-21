@@ -9,3 +9,9 @@ edition = "2021"
 chrono = "0.4.24"
 strum = "0.24.1"
 strum_macros = "0.24.3"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+# opt-level = "z"
