@@ -53,7 +53,7 @@ fn select_lesson(lessons: Vec<LessonListing>) -> LessonListing {
                 println!("invalid");
             }
         } else {
-            println!("wrong no help");
+            println!("cannot parse");
         }
     }
 }
