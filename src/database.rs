@@ -1,7 +1,7 @@
 use chrono::{DateTime, Datelike, Days, Local, Timelike, Weekday};
 
 use crate::{
-    lesson::{LessonListing, LessonType},
+    lesson::{LessonListing, LessonRating, LessonReview, LessonType},
     user::User,
 };
 
@@ -88,20 +88,20 @@ impl Database {
     }
 
     pub fn book_lesson(&mut self, chosen_lesson: LessonListing) {
-        let current_user = self.current_user.clone().expect("exist");
-        let user = self
+        let curr_user = self.current_user.clone().expect("exist");
+        let db_user = self
             .users
             .iter_mut()
-            .find(|u| u.is_same_as(&current_user))
+            .find(|u| u.is_same_as(&curr_user))
             .expect("exist");
         let lesson = self
             .lessons
             .iter_mut()
-            .find(|lesson| lesson == &&chosen_lesson)
+            .find(|lesson| lesson.is_same_as(&chosen_lesson))
             .expect("chosen_lesson should be confirmed to exist already");
 
-        user.add_new_lesson(chosen_lesson.clone());
-        lesson.enroll_student(user.clone());
+        db_user.add_new_lesson(chosen_lesson.clone());
+        lesson.enroll_student(db_user.clone());
 
         println!();
         println!(
@@ -113,11 +113,11 @@ impl Database {
     }
 
     pub fn cancel_lesson(&mut self, chosen_lesson: LessonListing) {
-        let current_user = self.current_user.clone().expect("exist");
-        let user = self
+        let curr_user = self.current_user.clone().expect("exist");
+        let db_user = self
             .users
             .iter_mut()
-            .find(|u| u.is_same_as(&current_user))
+            .find(|u| u.is_same_as(&curr_user))
             .expect("exist");
         let lesson = self
             .lessons
@@ -125,8 +125,8 @@ impl Database {
             .find(|l| l.is_same_as(&chosen_lesson))
             .expect("exist");
 
-        user.remove_lesson(chosen_lesson.clone());
-        lesson.remove_student(user.clone());
+        db_user.remove_lesson(chosen_lesson.clone());
+        lesson.remove_student(db_user.clone());
 
         println!();
         println!(
@@ -137,16 +137,19 @@ impl Database {
     }
 
     pub fn get_and_display_booked_lessons(&self) -> Vec<LessonListing> {
-        let u = self.current_user.as_ref().expect("exist");
+        let curr_user = self.current_user.as_ref().expect("exist");
+        let db_user = self
+            .users
+            .iter()
+            .find(|u| u.is_same_as(curr_user))
+            .expect("exist");
 
-        let enrolled_lessons = u.get_enrolled_lessons();
+        let enrolled_lessons = db_user.get_enrolled_lessons();
         if !enrolled_lessons.is_empty() {
-            println!();
             println!("*******************************************");
             println!("Your booked lessons:");
             println!();
         } else {
-            println!();
             println!("*******************************************");
             println!("You have no booked lessons!");
         }
@@ -161,6 +164,20 @@ impl Database {
             println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
         }
         enrolled_lessons
+    }
+
+    pub fn build_lesson_review(&mut self, rating: LessonRating, comment: String) -> LessonReview {
+        let u = self.current_user.as_ref().expect("exist");
+        LessonReview::new(u.clone(), rating, comment)
+    }
+
+    pub fn add_lesson_review(&mut self, l: LessonListing, review: LessonReview) {
+        let lesson = self
+            .lessons
+            .iter_mut()
+            .find(|lesson| lesson.is_same_as(&l))
+            .expect("exist");
+        lesson.add_review(review);
     }
 
     fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {

@@ -84,12 +84,10 @@ fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> V
         .collect();
 
     if !filtered_lessons.is_empty() {
-        println!();
         println!("*******************************************");
         println!("There's no available lessons!");
         println!();
     } else {
-        println!();
         println!("*******************************************");
         println!("Available lessons:");
         println!();
@@ -174,12 +172,10 @@ fn get_and_display_available_lessons_by_type(
         .collect();
 
     if !filtered_lessons.is_empty() {
-        println!();
         println!("*******************************************");
         println!("There's no available lessons!");
         println!();
     } else {
-        println!();
         println!("*******************************************");
         println!("Available lessons:");
         println!();
@@ -228,7 +224,6 @@ fn choose_lesson(filtered_lessons: Vec<&LessonListing>) -> LessonListing {
 }
 
 fn print_main_menu() {
-    println!();
     println!("*******************************************");
     println!("How would you like to view the available lessons?");
     println!();
@@ -238,7 +233,6 @@ fn print_main_menu() {
 }
 
 fn print_booking_weekday_choice() {
-    println!();
     println!("*******************************************");
     println!("View lessons on:");
     println!();
@@ -247,7 +241,6 @@ fn print_booking_weekday_choice() {
 }
 
 fn print_booking_type_choice() {
-    println!();
     println!("*******************************************");
     println!("View lessons by:");
     println!();

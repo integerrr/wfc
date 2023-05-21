@@ -2,7 +2,7 @@ use chrono::{DateTime, Local};
 use std::fmt::Display;
 use strum_macros::EnumIter;
 
-use crate::user::{self, User};
+use crate::user::User;
 
 #[derive(Debug, Clone, Copy, EnumIter, PartialEq, Eq, Default)]
 pub enum LessonType {
@@ -97,23 +97,49 @@ impl LessonListing {
     pub fn is_same_as(&self, other: &LessonListing) -> bool {
         (self.date == other.date) && (self.lesson_type == other.lesson_type)
     }
+
+    pub fn add_review(&mut self, review: LessonReview) {
+        self.reviews.push(review);
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LessonReview {
-    pub user: user::User,
-    pub rating: LessonRating,
-    pub comment: String,
+    user: User,
+    rating: LessonRating,
+    comment: String,
 }
 
-impl LessonReview {}
+impl LessonReview {
+    pub fn new(user: User, rating: LessonRating, comment: String) -> LessonReview {
+        LessonReview {
+            user,
+            rating,
+            comment,
+        }
+    }
+
+    pub fn get_user(&self) -> User {
+        self.user.clone()
+    }
+
+    pub fn get_rating(&self) -> LessonRating {
+        self.rating
+    }
+
+    pub fn get_comment(&self) -> String {
+        self.comment.clone()
+    }
+}
 
 #[repr(i32)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum LessonRating {
     VeryGood = 5,
     Good = 4,
-    Neutral = 3,
+    Ok = 3,
     Bad = 2,
     VeryBad = 1,
+    #[default]
+    Default = 0,
 }
