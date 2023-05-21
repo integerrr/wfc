@@ -13,8 +13,14 @@ pub fn main_menu(db: &mut Database) {
             println!("Error: {e}");
         } else {
             match input_option.trim().parse::<i32>() {
-                Ok(1) => change_booking_menu(db),
-                Ok(2) => cancel_booking_menu(db),
+                Ok(1) => {
+                    change_booking_menu(db);
+                    break;
+                }
+                Ok(2) => {
+                    cancel_booking_menu(db);
+                    break;
+                }
                 Ok(3) => break,
                 Ok(_) => println!("invalid"),
                 Err(e) => println!("Error: {e}"),
