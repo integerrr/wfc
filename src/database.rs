@@ -6,14 +6,14 @@ use crate::{
 };
 
 #[derive(Debug, Clone)]
-pub struct Database {
+pub struct Database<'a> {
     pub users: Vec<User>,
     pub lessons: Vec<LessonListing>,
-    pub current_user: Option<User>,
+    pub current_user: Option<&'a User>,
 }
 
-impl Database {
-    pub fn new() -> Database {
+impl Database<'static> {
+    pub fn new() -> Database<'static> {
         Database {
             users: Vec::new(),
             lessons: Self::generate_lessons(),
@@ -25,11 +25,16 @@ impl Database {
         self.current_user = None;
     }
 
-    fn set_current_user(&mut self, user: User) {
-        self.current_user = Some(user);
+    fn set_current_user(&'static mut self, username: &str) {
+        if let Some(db_user) = self.users.iter().find(|u| u.get_username() == username) {
+            self.current_user = Some(db_user);
+        } else {
+            panic!("impossible to not have user already existing in db");
+        }
     }
 
-    fn add_user(&mut self, user: User) {
+    fn add_user(&mut self, username: &str) {
+        let user = User::new(username);
         self.users.push(user);
     }
 
@@ -66,21 +71,17 @@ impl Database {
         lessons
     }
 
-    pub fn login_user_validation(&mut self, login_username: impl Into<String>) {
+    pub fn login_user_validation(&'static mut self, login_username: impl Into<String>) {
         let username = login_username.into();
+        let is_existing_user = self.users.iter().any(|u| u.get_username() == username);
 
-        if let Some(user) = self
-            .users
-            .iter()
-            .find(|user| user.get_username() == username)
-        {
-            self.set_current_user(user.clone());
+        if is_existing_user {
+            self.set_current_user(&username);
             println!("*******************************************");
             println!("Welcome back {}!", &username);
         } else {
-            let new_user = User::new(&username);
-            self.set_current_user(new_user.clone());
-            self.add_user(new_user);
+            self.add_user(&username);
+            self.set_current_user(&username);
             println!("*******************************************");
             println!("Welcome first timer! {}", &username);
         }
@@ -166,8 +167,8 @@ impl Database {
     }
 
     pub fn build_lesson_review(&mut self, rating: LessonRating, comment: String) -> LessonReview {
-        let u = self.current_user.as_ref().expect("exist");
-        LessonReview::new(u.clone(), rating, comment)
+        let u = self.current_user.expect("exist").clone();
+        LessonReview::new(u, rating, comment)
     }
 
     pub fn add_lesson_review(&mut self, l: LessonListing, review: LessonReview) {

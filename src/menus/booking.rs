@@ -68,7 +68,7 @@ fn book_lesson_by_weekday_menu(db: &mut Database) -> LessonListing {
     chosen_lesson
 }
 
-fn get_and_display_available_lessons_by_weekday(db: &Database, wd: Weekday) -> Vec<&LessonListing> {
+fn get_and_display_available_lessons_by_weekday<'a>(db: &'a Database<'a>, wd: Weekday) -> Vec<&'a LessonListing> {
     let current_user = db.current_user.clone().expect("e");
     let filtered_lessons: Vec<_> = db
         .lessons
@@ -153,10 +153,10 @@ fn book_lesson_by_type_menu(db: &mut Database) -> LessonListing {
     chosen_lesson
 }
 
-fn get_and_display_available_lessons_by_type(
-    db: &Database,
+fn get_and_display_available_lessons_by_type<'a>(
+    db: &'a Database<'a>,
     lesson_type: LessonType,
-) -> Vec<&LessonListing> {
+) -> Vec<&'a LessonListing> {
     let current_username = &db.current_user.as_ref().expect("exist").get_username();
     let filtered_lessons: Vec<_> = db
         .lessons
