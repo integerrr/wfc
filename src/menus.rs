@@ -1,6 +1,7 @@
 mod attend;
 mod booking;
 mod change_or_cancel;
+mod monthly_lesson_report;
 
 use std::io;
 
@@ -20,7 +21,7 @@ pub fn main_menu(db: &mut Database) {
                 Ok(1) => _ = booking::main_menu(db),
                 Ok(2) => change_or_cancel::main_menu(db),
                 Ok(3) => attend::main_menu(db),
-                Ok(4) => todo!(),
+                Ok(4) => monthly_lesson_report::main_menu(db),
                 Ok(5) => todo!(),
                 Ok(6) => break,
                 Ok(7) => {
