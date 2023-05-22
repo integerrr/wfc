@@ -218,7 +218,7 @@ fn choose_lesson(filtered_lessons: Vec<&LessonListing>) -> LessonListing {
                 println!("invalid option");
             }
         } else {
-            panic!("couldn't parse the option input?");
+            println!("couldn't parse the option input?");
         }
     }
 
