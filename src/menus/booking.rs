@@ -65,6 +65,7 @@ fn book_lesson_by_weekday_menu(db: &mut Database) -> LessonListing {
 
     let chosen_lesson = choose_lesson(filtered_lessons);
     db.book_lesson(chosen_lesson.clone());
+    db.refresh_current_user();
     chosen_lesson
 }
 
@@ -150,6 +151,7 @@ fn book_lesson_by_type_menu(db: &mut Database) -> LessonListing {
 
     let chosen_lesson: LessonListing = choose_lesson(filtered_lessons);
     db.book_lesson(chosen_lesson.clone());
+    db.refresh_current_user();
     chosen_lesson
 }
 

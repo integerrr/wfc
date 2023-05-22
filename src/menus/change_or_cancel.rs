@@ -39,6 +39,7 @@ fn change_booking_menu(db: &mut Database) {
 
     if booking::main_menu(db).is_some() {
         db.cancel_lesson(old_lesson);
+        db.refresh_current_user();
     }
 }
 
@@ -51,6 +52,7 @@ fn cancel_booking_menu(db: &mut Database) {
 
     let selected_lesson = select_lesson(booked_lessons);
     db.cancel_lesson(selected_lesson);
+    db.refresh_current_user();
 }
 
 fn select_lesson(lessons: Vec<LessonListing>) -> LessonListing {

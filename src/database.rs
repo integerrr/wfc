@@ -25,11 +25,27 @@ impl Database {
         self.current_user = None;
     }
 
-    fn set_current_user(&mut self, user: User) {
-        self.current_user = Some(user);
+    pub fn refresh_current_user(&mut self) {
+        let curr_username = self.current_user.clone().expect("exist").get_username();
+        let user = self
+            .users
+            .iter()
+            .find(|u| u.get_username() == curr_username)
+            .expect("exist");
+        self.current_user = Some(user.clone());
     }
 
-    fn add_user(&mut self, user: User) {
+    fn set_current_user(&mut self, username: &str) {
+        let user = self
+            .users
+            .iter()
+            .find(|u| u.get_username() == username)
+            .expect("exist");
+        self.current_user = Some(user.clone());
+    }
+
+    fn add_user(&mut self, username: &str) {
+        let user = User::new(username);
         self.users.push(user);
     }
 
@@ -68,19 +84,15 @@ impl Database {
 
     pub fn login_user_validation(&mut self, login_username: impl Into<String>) {
         let username = login_username.into();
+        let user_exist_in_db = self.users.iter().any(|u| u.get_username() == username);
 
-        if let Some(user) = self
-            .users
-            .iter()
-            .find(|user| user.get_username() == username)
-        {
-            self.set_current_user(user.clone());
+        if user_exist_in_db {
+            self.set_current_user(&username);
             println!("*******************************************");
             println!("Welcome back {}!", &username);
         } else {
-            let new_user = User::new(&username);
-            self.set_current_user(new_user.clone());
-            self.add_user(new_user);
+            self.add_user(&username);
+            self.set_current_user(&username);
             println!("*******************************************");
             println!("Welcome first timer! {}", &username);
         }
