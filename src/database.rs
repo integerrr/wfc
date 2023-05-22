@@ -156,13 +156,13 @@ impl Database {
             .expect("exist");
 
         let enrolled_lessons = db_user.get_enrolled_lessons();
-        if !enrolled_lessons.is_empty() {
+        if enrolled_lessons.is_empty() {
+            println!("*******************************************");
+            println!("You have no booked lessons!");
+        } else {
             println!("*******************************************");
             println!("Your booked lessons:");
             println!();
-        } else {
-            println!("*******************************************");
-            println!("You have no booked lessons!");
         }
 
         for (index, lesson) in enrolled_lessons.iter().enumerate() {
@@ -177,6 +177,46 @@ impl Database {
         enrolled_lessons
     }
 
+    pub fn get_and_display_attended_lessons(&self) -> Vec<LessonListing> {
+        let curr_user = self.current_user.as_ref().expect("exist");
+        let db_user = self
+            .users
+            .iter()
+            .find(|u| u.is_same_as(curr_user))
+            .expect("exist");
+
+        let attended_lessons: Vec<_> = db_user
+            .get_enrolled_lessons()
+            .iter()
+            .filter(|l| {
+                !l.get_reviews()
+                    .iter()
+                    .any(|r| r.get_user().is_same_as(curr_user))
+            })
+            .cloned()
+            .collect();
+
+        if attended_lessons.is_empty() {
+            println!("*******************************************");
+            println!("You have no booked lessons!");
+        } else {
+            println!("*******************************************");
+            println!("Your booked lessons:");
+            println!();
+        }
+
+        for (idx, lesson) in attended_lessons.iter().enumerate() {
+            println!(
+                "{}. {} ({})",
+                idx + 1,
+                lesson.get_date().format("%d/%m/%Y %H:%M"),
+                lesson.get_date().weekday()
+            );
+            println!("    {}, £{}", lesson.get_lesson_type(), lesson.get_price());
+        }
+        attended_lessons
+    }
+
     pub fn build_lesson_review(&mut self, rating: LessonRating, comment: String) -> LessonReview {
         let u = self.current_user.as_ref().expect("exist");
         LessonReview::new(u.clone(), rating, comment)
@@ -188,7 +228,21 @@ impl Database {
             .iter_mut()
             .find(|lesson| lesson.is_same_as(&l))
             .expect("exist");
-        lesson.add_review(review);
+
+        let curr_user = self.current_user.as_ref().expect("exist");
+        let db_user = self
+            .users
+            .iter_mut()
+            .find(|u| u.is_same_as(curr_user))
+            .expect("exist");
+        let temp = db_user.get_enrolled_lessons_mut();
+        let user_lesson = temp
+            .iter_mut()
+            .find(|lesson| lesson.is_same_as(&l))
+            .expect("exist");
+
+        lesson.add_review(review.clone());
+        user_lesson.add_review(review);
     }
 
     fn change_datetime_to_10am(mut time: DateTime<Local>) -> DateTime<Local> {

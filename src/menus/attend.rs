@@ -26,7 +26,7 @@ pub fn main_menu(db: &mut Database) {
 }
 
 fn attend_lesson(db: &mut Database) {
-    let booked_lessons = db.get_and_display_booked_lessons();
+    let booked_lessons = db.get_and_display_attended_lessons();
     if booked_lessons.is_empty() {
         return;
     }
